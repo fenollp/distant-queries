@@ -1,0 +1,86 @@
+BYPASSer les resctrictions SQL des hébergeurs gratuits
+	Pierre Fenoll aka Radioxid - Contact at zmindster at gmail dot com
+		Février 2009 - Juillet 2009
+
+********************************************************************************
+http://www.siteduzero.com/forum-83-373942-p1-script-php-bypasser-les-restrictions-de-connections.html
+PRÉSENTATION *******************************************************************
+	Vous le savez peut-être, la connection au serveur SQL chez FREE (et d'autres 
+hébergeurs gratuits) est restreinte aux seuls serveurs de l'hébergeur. En gros, 
+si l'on ne fait pas nos requètes SQL sur le serveur mais à partir d'une IP 
+différente, SQL.FREE.FR (ou le serveur SQL) ne les acceptera pas.
+
+	Ces scripts sont à votre disposition pour que vous puissiez effectuer toutes 
+les requètes que vous désirez sur un serveur FREE (ou autre) à partir d'une autre 
+adresse IP.
+********************************************************************************
+
+COMMENT ÇA MARCHE ? ************************************************************
+	Pour vous expliquer, nous aurons un serveur FREE et un serveur LOCAL. J'ai 
+résummé le code en deux fichiers, l'un sur le serveur FREE (ou DISTANT) et 
+l'autre sur le serveur LOCAL. Deux fonctions, l'une en LOCAL et l'autre en DISTANT
+devront accompagner les scripts.
+
+Le script LOCAL va envoyer des requètes SQL (mysql_query) au script DISTANT qui 
+se chargera de se connecter (mysql_connect) et d'exécuter ces requètes SQL et de 
+renvoyer les réponses au script LOCAL. Une option permet également de générer des 
+mysqldump d'une base/table donnée.
+
+	Tous ces échanges se font en POST. POST n'est pas sécurisé ! 
+Activer HTTPS (HTTP + Secure Socket Layer) est une chose différente chez chaque 
+hébergeur gratuit, je n'expliquerais donc pas ici comment activer SSL. 
+	Les échanges actuels de ces scripts se font en HTTP non secure ! 
+Quiconque réussirait à "regarder" le flux de données s'échangeant via POST pourra 
+comprendre et faire des requètes à son tour. Comme supprimer la Base De Données...
+	Toutefois, la version cURL de 'func.distant_queries.php' comporte une partie 
+HTTPS que vous pouvez activer|désactiver selon votre configuration !!!
+********************************************************************************
+
+CE QUE VOUS DEVEZ FAIRE ********************************************************
+	A. Dossier ./distant
+  0. Modifiez les variables $_POST['log'] et $_POST['pwd'] 'de distant.php' selon 
+vos désirs (ne les laissez pas vides). Les valeurs de ces variables devront être 
+les mêmes que celles de $log et $pwd dans 'local.php' et 'func.distant_queries.php' 
+du dossier ../local.
+  1. Modifiez vos identifiants au serveur SQL dans 'distant.php'.
+  2. Uploadez les fichers 'distant.php' et 'function.fix_magic_quotes.php' dans un 
+même dossier sur un serveur DISTANT.
+  3. Importez le fichier jeux_video.sql dans votre Base De Données (pour les tests 
+seulement).
+
+	B. Dossier ./local
+  0. Si l'extension PHP cURL n'est pas activée chez vous, optez pour la fonction 
+'func.distant_queries.php' contenue dans ./NO_CURL.
+  1. Modifiez les variables dans 'local.php' et 'func.distant_queries.php' 
+comme stipulé en A.0.
+  2. Modifiez le $pathToWhereToPOST utilisé dans 'local.php' avec l'URL absolue 
+du fichier 'distant.php' uploadé.
+********************************************************************************
+
+LICENSE ************************************************************************
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                    Version 2, December 2004
+
+ Copyright (C) 2004 Sam Hocevar
+  14 rue de Plaisance, 75014 Paris, France
+ Everyone is permitted to copy and distribute verbatim or modified
+ copies of this license document, and changing it is allowed as long
+ as the name is changed.
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
+  1. Mais si vous n'y voyez pas d'objection, faites-moi par de vos idées !
+********************************************************************************
+
+CHANGELOG **********************************************************************
+	Février 2009:
+Mise en place des bases;
+POST avec file_get_contents();
+Gestion des requètes et tout et tout...
+
+	Juillet 2009:
+Passge du POST en cURL (car plus rapide!);
+Possibilité de backuper ses BDD (à faire quand hébergeur "instable") !
+********************************************************************************
